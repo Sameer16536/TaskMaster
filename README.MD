@@ -6,7 +6,7 @@ TaskMaster is a simple command-line task management tool written in Go. It allow
 
 1. **Clone the repository** :
    ```sh
-   git clone <repo-url>
+   git clone [<repo-url>](https://github.com/Sameer16536/TaskMaster)
    cd TaskMaster
    ```
 
