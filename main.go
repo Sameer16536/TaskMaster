@@ -21,9 +21,9 @@ func main() {
 	case "list":
 		listTasks()
 	case "complete":
-		fmt.Println("Coming soon...")
+		completeTask(os.Args[2:])
 	case "delete":
-		fmt.Println("Coming soon...")
+		deleteTask(os.Args[2:])
 	default:
 		printUsage()
 	}

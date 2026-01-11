@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -76,9 +77,91 @@ func addTask(args []string) {
 
 	fmt.Printf("✅ Task added: %s (ID: %d)\n", description, newTask.ID)
 }
-func deleteTask() {}
+func deleteTask(args []string) {
+	if len(args) == 0 {
+		fmt.Println("Missing task ID")
+		return
+	}
+	//Convert ID from string to int
+	id, err := strconv.Atoi(args[0])
+	if err != nil {
+		fmt.Println("Invalid task ID")
+		return
+	}
+	//Load tasks
+	tasks, err := loadTasks()
+	if err != nil {
+		fmt.Printf("Error loading tasks: %v\n", err)
+		return
+	}
+	//Find and delete task
+	found := false
+	for i, task := range tasks {
+		if task.ID == id {
+			//Remove task from slice
+			tasks = append(tasks[:i], tasks[i+1:]...)
+			found = true
+			break
+		}
+	}
+	if !found {
+		fmt.Printf("Task with ID %d not found\n", id)
+		return
+	}
+	//Save tasks
+	err = saveTasks(tasks)
+	if err != nil {
+		fmt.Printf("Error saving tasks: %v\n", err)
+		return
+	}
+	fmt.Printf("✅ Task with ID %d deleted\n", id)
 
-func updateTask() {}
+}
+
+func completeTask(args []string) {
+	if len(args) == 0 {
+		fmt.Println("Missing task ID")
+		return
+	}
+
+	//Convert ID from string to int
+	id, err := strconv.Atoi(args[0])
+	if err != nil {
+		fmt.Println("Invalid task ID")
+		return
+	}
+
+	//Load tasks
+	tasks, err := loadTasks()
+	if err != nil {
+		fmt.Printf("Error loading tasks: %v\n", err)
+		return
+	}
+
+	//Find and update task
+	found := false
+	for i, task := range tasks {
+		if task.ID == id {
+			tasks[i].Completed = true
+			tasks[i].Description = fmt.Sprintf("%s (Done)", task.Description)
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		fmt.Printf("Task with ID %d not found\n", id)
+		return
+	}
+
+	//Save tasks
+	err = saveTasks(tasks)
+	if err != nil {
+		fmt.Printf("Error saving tasks: %v\n", err)
+		return
+	}
+
+}
 
 func listTasks() {
 	tasks, err := loadTasks()
